@@ -1,4 +1,6 @@
-namespace CadastroCliente
+using CadastroCliente;
+
+namespace Services
 {
     public interface IClienteService
     {

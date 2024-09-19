@@ -1,7 +1,10 @@
 using CadastroCliente;
 using Microsoft.EntityFrameworkCore;
 using Repository;
-
+using MongoDB.Driver;
+using Infrastructure.MongoDB; // Ajustado para namespace específico do MongoDB
+using Repositories;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,19 +20,27 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Adicionar o DbContext para o MySQL
+// Adicionar o DbContext para o MySQL (para commands)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0, 21))));
 
-// Registrar os repositórios e serviços
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<IClienteService, ClienteService>(); // Utilizando a interface do serviço
+// Configurar MongoDB (para queries)
+var mongoClient = new MongoClient(builder.Configuration.GetConnectionString("MongoConnection"));
+var mongoDatabase = mongoClient.GetDatabase("ClientesDb");
+builder.Services.AddSingleton(mongoDatabase);
+
+// Registrar repositórios de Commands (MySQL) e Queries (MongoDB)
+builder.Services.AddScoped<IClienteCommandRepository, ClienteCommandRepository>();
+builder.Services.AddScoped<IClienteQueryRepository, Infrastructure.MongoDB.ClienteQueryRepository>(); // Corrigido para refletir namespace correto
+
+// Registrar IClienteService
+builder.Services.AddScoped<IClienteService, ClienteService>(); // Adicionar esta linha
 
 // Adicionar serviços de controladores
 builder.Services.AddControllers();
 
-// Adicionar o serviço do Swagger
+// Adicionar Swagger
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

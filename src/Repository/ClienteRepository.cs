@@ -1,49 +1,56 @@
 using CadastroCliente;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using Infrastructure.MongoDB;
+using Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class ClienteRepository : IClienteRepository
+    public class ClienteQueryRepository : IClienteQueryRepository
     {
-        private readonly AppDbContext _context;
+        private readonly IMongoCollection<Cliente> _clientesCollection;
 
-        public ClienteRepository(AppDbContext context)
+        public ClienteQueryRepository(IMongoDatabase database)
         {
-            _context = context;
+            _clientesCollection = database.GetCollection<Cliente>("Clientes");
         }
 
         public async Task<IEnumerable<Cliente>> GetAllAsync()
         {
-            return await _context.Clientes.ToListAsync();
+            return await _clientesCollection.Find(_ => true).ToListAsync();
         }
 
-        public async Task<Cliente> GetByIdAsync(int id)
+        public async Task<Cliente?> GetByIdAsync(int id)
         {
-            return await _context.Clientes.FindAsync(id);
+            var filter = Builders<Cliente>.Filter.Eq(c => c.Id, id);
+            return await _clientesCollection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public async Task AddAsync(Cliente cliente)
+        Task IClienteQueryRepository.AddToMongoAsync(Cliente cliente)
         {
-            await _context.Clientes.AddAsync(cliente);
-            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task UpdateAsync(Cliente cliente)
+        Task IClienteQueryRepository.DeleteFromMongoAsync(int id)
         {
-            _context.Clientes.Update(cliente);
-            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task DeleteAsync(int id)
+        Task<IEnumerable<Cliente>> IClienteQueryRepository.GetAllAsync()
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente != null)
-            {
-                _context.Clientes.Remove(cliente);
-                await _context.SaveChangesAsync();
-            }
+            throw new NotImplementedException();
+        }
+
+        Task<Cliente?> IClienteQueryRepository.GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IClienteQueryRepository.UpdateInMongoAsync(Cliente cliente)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,6 @@
-namespace CadastroCliente
+using CadastroCliente;
+
+namespace Repositories
 {
     public interface IClienteRepository
     {
