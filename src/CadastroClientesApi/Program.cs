@@ -1,10 +1,10 @@
-using CadastroCliente;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using MongoDB.Driver;
-using Infrastructure.MongoDB; // Ajustado para namespace específico do MongoDB
 using Repositories;
 using Services;
+using Command;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +33,14 @@ builder.Services.AddSingleton(mongoDatabase);
 // Registrar repositórios de Commands (MySQL) e Queries (MongoDB)
 builder.Services.AddScoped<IClienteCommandRepository, ClienteCommandRepository>();
 builder.Services.AddScoped<IClienteQueryRepository, Infrastructure.MongoDB.ClienteQueryRepository>(); // Corrigido para refletir namespace correto
+
+
+// Registrar os Command Handlers
+builder.Services.AddScoped<AddClienteCommandHandler>();
+builder.Services.AddScoped<UpdateClienteCommandHandler>();
+builder.Services.AddScoped<DeleteClienteCommandHandler>();
+
+
 
 // Registrar IClienteService
 builder.Services.AddScoped<IClienteService, ClienteService>(); // Adicionar esta linha

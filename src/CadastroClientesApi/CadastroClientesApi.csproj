@@ -31,7 +31,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CadastroCliente\CadastroCliente.csproj" />
-    <ProjectReference Include="..\MongoDB\MongoDB.csproj" />
+    <ProjectReference Include="..\Command\Command.csproj" />
+    <ProjectReference Include="..\Query\Query.csproj" />
     <ProjectReference Include="..\Repositories\Repositories.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
