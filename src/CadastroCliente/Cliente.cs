@@ -8,10 +8,18 @@ namespace CadastroCliente
 {
     public class Cliente
     {
-        public int Id { get; set; }
+        public Cliente(string nomeEmpresa, string porte)
+        {
+            NomeEmpresa = nomeEmpresa;
+            Porte = porte;
+        }
 
-        public string? NomeEmpresa { get; set; } 
+        public int Id { get; }
 
-        public string? Porte { get; set; }  
+        public string? NomeEmpresa { get; } 
+
+        public string? Porte { get; }
+
     }
+
 }

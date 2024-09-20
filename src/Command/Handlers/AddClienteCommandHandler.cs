@@ -1,10 +1,5 @@
-﻿using CadastroCliente;
-using Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Repositories;
+using Contract;
 
 namespace Command
 {
@@ -20,13 +15,21 @@ namespace Command
             _clienteQueryRepository = clienteQueryRepository;
         }
 
-        public async Task Handle(Cliente cliente)
+        public async Task<ClienteCommandResult> Handle(ClienteCommand input)
         {
             // Adiciona no MySQL
+            var cliente = new CadastroCliente.Cliente(input.NomeEmpresa, input.Porte);
             await _clienteRepository.AddAsync(cliente);
             
             // Sincroniza com MongoDB
             await _clienteQueryRepository.AddToMongoAsync(cliente);
+
+            return new ClienteCommandResult
+            {
+                Id = cliente.Id,
+                NomeEmpresa = cliente.NomeEmpresa,
+                Porte = cliente.Porte
+            };
         }
     }
 }

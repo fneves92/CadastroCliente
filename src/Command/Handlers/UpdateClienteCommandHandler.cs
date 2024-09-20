@@ -1,12 +1,7 @@
-﻿using CadastroCliente;
+﻿using Contract;
 using Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Command
+namespace Command.Handlers
 {
     public class UpdateClienteCommandHandler
     {
@@ -20,13 +15,21 @@ namespace Command
             _clienteQueryRepository = clienteQueryRepository;
         }
 
-        public async Task Handle(Cliente cliente)
+        public async Task<ClienteCommandResult> Handle(ClienteCommand input)
         {
             // Atualiza no MySQL
+            var cliente = new CadastroCliente.Cliente(input.NomeEmpresa, input.Porte);
             await _clienteRepository.UpdateAsync(cliente);
             
             // Sincroniza com MongoDB
             await _clienteQueryRepository.UpdateInMongoAsync(cliente);
+
+            return new ClienteCommandResult()
+            {
+                Id = cliente.Id,
+                NomeEmpresa = cliente.NomeEmpresa,
+                Porte = cliente.Porte
+            };
         }
     }
 }

@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Repositories;
 using Services;
 using Command;
+using Command.Handlers;
 
 
 var builder = WebApplication.CreateBuilder(args);

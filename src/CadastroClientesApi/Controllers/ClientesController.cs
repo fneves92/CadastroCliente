@@ -1,7 +1,8 @@
-﻿using CadastroCliente;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 using Command;
+using Command.Handlers;
+using Contract;
 
 namespace CadastroClientesApi.Controllers
 {
@@ -27,7 +28,7 @@ namespace CadastroClientesApi.Controllers
 
         // GET: api/clientes (Consultas)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
+        public async Task<ActionResult<IEnumerable<ClienteCommandResult>>> GetClientes()
         {
             var clientes = await _clienteService.GetAllClientesAsync();
             return Ok(clientes);
@@ -35,7 +36,7 @@ namespace CadastroClientesApi.Controllers
 
         // GET: api/clientes/{id} (Consultas)
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<ClienteCommandResult>> GetCliente(int id)
         {
             var cliente = await _clienteService.GetClienteByIdAsync(id);
             if (cliente == null)
@@ -48,21 +49,16 @@ namespace CadastroClientesApi.Controllers
 
         // POST: api/clientes (Comandos - Adicionar)
         [HttpPost]
-        public async Task<ActionResult> PostCliente(Cliente cliente)
+        public async Task<ActionResult> PostCliente(ClienteCommand cliente)
         {
-            await _addClienteHandler.Handle(cliente); // Usando o Command Handler
-            return CreatedAtAction(nameof(GetCliente), new { id = cliente.Id }, cliente);
+            var result = await _addClienteHandler.Handle(cliente); // Usando o Command Handler
+            return CreatedAtAction(nameof(GetCliente), new { id = result.Id }, cliente);
         }
 
         // PUT: api/clientes/{id} (Comandos - Atualizar)
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutCliente(int id, ClienteCommand cliente)
         {
-            if (id != cliente.Id)
-            {
-                return BadRequest();
-            }
-
             await _updateClienteHandler.Handle(cliente); // Usando o Command Handler
             return NoContent();
         }
