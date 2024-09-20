@@ -34,9 +34,7 @@
     <ProjectReference Include="..\Command\Command.csproj" />
     <ProjectReference Include="..\Contract\Contract.csproj" />
     <ProjectReference Include="..\Query\Query.csproj" />
-    <ProjectReference Include="..\Repositories\Repositories.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>

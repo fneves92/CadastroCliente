@@ -13,19 +13,6 @@ namespace Services
             _clienteCommandRepository = clienteCommandRepository;
             _clienteQueryRepository = clienteQueryRepository;
         }
-
-        // Consultas (Leitura) em MongoDB
-        public async Task<IEnumerable<Cliente>> GetAllClientesAsync()
-        {
-            return await _clienteQueryRepository.GetAllAsync(); // MongoDB
-        }
-
-        public async Task<Cliente> GetClienteByIdAsync(int id)
-        {
-            return await _clienteQueryRepository.GetByIdAsync(id); // MongoDB
-        }
-
-        // Comandos (Escrita) em MySQL + Projeção para MongoDB
         public async Task AddClienteAsync(Cliente cliente)
         {
             await _clienteCommandRepository.AddAsync(cliente); // MySQL

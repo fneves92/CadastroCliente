@@ -1,10 +1,4 @@
 ﻿using CadastroCliente;
-using Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -28,7 +22,6 @@ namespace Repository
             _context.Clientes.Update(cliente);
             await _context.SaveChangesAsync();
         }
-
         public async Task DeleteAsync(int id)
         {
             var cliente = await _context.Clientes.FindAsync(id);

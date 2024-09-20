@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Services;
 using Command;
 using Command.Handlers;
 using Contract;
+using Query.Handlers;
 
 namespace CadastroClientesApi.Controllers
 {
@@ -10,27 +10,30 @@ namespace CadastroClientesApi.Controllers
     [Route("api/[controller]")]
     public class ClientesController : ControllerBase
     {
-        private readonly IClienteService _clienteService;
+        private readonly GetAllClientesQueryHandler _getAllClientesQueryHandler;
+        private readonly GetClienteByIdQueryHandler _getClienteByIdQueryHandler;
         private readonly AddClienteCommandHandler _addClienteHandler;
         private readonly UpdateClienteCommandHandler _updateClienteHandler;
         private readonly DeleteClienteCommandHandler _deleteClienteHandler;
 
-        public ClientesController(IClienteService clienteService, 
-                                  AddClienteCommandHandler addClienteHandler,
+        public ClientesController(AddClienteCommandHandler addClienteHandler,
                                   UpdateClienteCommandHandler updateClienteHandler,
-                                  DeleteClienteCommandHandler deleteClienteHandler)
+                                  DeleteClienteCommandHandler deleteClienteHandler,
+                                  GetClienteByIdQueryHandler getClienteByIdQueryHandler,
+                                  GetAllClientesQueryHandler getAllClientesQueryHandler)
         {
-            _clienteService = clienteService;
             _addClienteHandler = addClienteHandler;
             _updateClienteHandler = updateClienteHandler;
             _deleteClienteHandler = deleteClienteHandler;
+            _getClienteByIdQueryHandler = getClienteByIdQueryHandler;
+            _getAllClientesQueryHandler = getAllClientesQueryHandler;
         }
 
         // GET: api/clientes (Consultas)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ClienteCommandResult>>> GetClientes()
         {
-            var clientes = await _clienteService.GetAllClientesAsync();
+            var clientes = await _getAllClientesQueryHandler.Handle();
             return Ok(clientes);
         }
 
@@ -38,7 +41,7 @@ namespace CadastroClientesApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ClienteCommandResult>> GetCliente(int id)
         {
-            var cliente = await _clienteService.GetClienteByIdAsync(id);
+            var cliente = await _getClienteByIdQueryHandler.Handle(id);
             if (cliente == null)
             {
                 return NotFound();
@@ -59,7 +62,7 @@ namespace CadastroClientesApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCliente(int id, ClienteCommand cliente)
         {
-            await _updateClienteHandler.Handle(cliente); // Usando o Command Handler
+            await _updateClienteHandler.Handle(id,cliente); // Usando o Command Handler
             return NoContent();
         }
 

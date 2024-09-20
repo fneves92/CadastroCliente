@@ -1,28 +1,23 @@
-﻿using Repositories;
+﻿using CadastroCliente;
 using Contract;
 
 namespace Command
 {
     public class AddClienteCommandHandler
     {
-        private readonly IClienteCommandRepository _clienteRepository;
-        private readonly IClienteQueryRepository _clienteQueryRepository; // Repositório de leitura (MongoDB)
+        private readonly IClienteService _clienteService;
 
-        public AddClienteCommandHandler(IClienteCommandRepository clienteRepository, 
-                                        IClienteQueryRepository clienteQueryRepository)
+        public AddClienteCommandHandler(IClienteService clienteService)                                      
         {
-            _clienteRepository = clienteRepository;
-            _clienteQueryRepository = clienteQueryRepository;
+            _clienteService = clienteService;
         }
 
         public async Task<ClienteCommandResult> Handle(ClienteCommand input)
-        {
-            // Adiciona no MySQL
-            var cliente = new CadastroCliente.Cliente(input.NomeEmpresa, input.Porte);
-            await _clienteRepository.AddAsync(cliente);
-            
-            // Sincroniza com MongoDB
-            await _clienteQueryRepository.AddToMongoAsync(cliente);
+        {            
+            var cliente = new CadastroCliente.Cliente();
+            cliente.NomeEmpresa = input.NomeEmpresa;
+            cliente.Porte = input.Porte;
+            await _clienteService.AddClienteAsync(cliente);        
 
             return new ClienteCommandResult
             {

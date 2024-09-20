@@ -1,25 +1,19 @@
 ﻿using CadastroCliente;
-using Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Query.Handlers
 {
     public class GetClienteByIdQueryHandler
     {
-        private readonly IClienteQueryRepository _clienteQueryRepository;
+        private readonly IClienteMongoRepository _clienteMongoRepository;
 
-        public GetClienteByIdQueryHandler(IClienteQueryRepository clienteQueryRepository)
+        public GetClienteByIdQueryHandler(IClienteMongoRepository clienteQueryRepository)
         {
-            _clienteQueryRepository = clienteQueryRepository;
+            _clienteMongoRepository = clienteQueryRepository;
         }
 
         public async Task<Cliente?> Handle(int id)
         {
-            return await _clienteQueryRepository.GetByIdAsync(id);
+            return await _clienteMongoRepository.GetByIdAsync(id);
         }
     }
 }

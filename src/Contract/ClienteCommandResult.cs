@@ -1,5 +1,4 @@
 ﻿namespace Contract;
-
 public class ClienteCommandResult
 {
     public int Id { get; set; }

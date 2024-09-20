@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CadastroCliente\CadastroCliente.csproj" />
     <ProjectReference Include="..\MongoDB\MongoDB.csproj" />
-    <ProjectReference Include="..\Repositories\Repositories.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CadastroCliente\CadastroCliente.csproj" />
     <ProjectReference Include="..\Contract\Contract.csproj" />
-    <ProjectReference Include="..\Repositories\Repositories.csproj" />
   </ItemGroup>
 
 </Project>
